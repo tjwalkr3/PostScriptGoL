@@ -1,0 +1,23 @@
+%!PS
+
+% Set font and size
+/Courier findfont 22 scalefont setfont
+
+% Initial position
+/initialX 100 def
+/initialY 700 def
+
+% Line height (distance between lines)
+/lineHeight 22 def
+
+% String to be printed
+/message (Hello, world! ) def
+
+% Loop to print the string 5 times
+0 1 4 {   % Loop from 0 to 4 (5 iterations)
+    /i exch def
+    initialX initialY i lineHeight mul sub moveto
+    message show
+} for
+
+showpage
