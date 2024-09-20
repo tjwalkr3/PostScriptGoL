@@ -1,15 +1,52 @@
 %!PS
 
-/Courier findfont 22 scalefont setfont
+/pageSize 200 def
+/cellSize 10 def
+<< /PageSize [pageSize pageSize] >> setpagedevice
 
-/initialX 100 def
-/initialY 700 def
+/swap2 { % a b c d -- c d a b prints as b a d c with pstack
+    4 2 roll
+} def
 
-/message (Hello, world! ) def
+/drawline { % fromx fromy tox toy --
+    swap2
+    moveto
+    lineto
+    stroke
+} def
 
-0 1 1 {
-    /i exch def
-    initialX initialY moveto
-    message show
+/skipCopyBack { % a b -- b a b
+    dup
+    3 1 roll
+} def
+
+/reuseY { % y xStart xEnd -- xStart y eEnd y
+    3 1 roll
+    skipCopyBack
+} def
+
+[10 {10 array} repeat]
+
+/hline { % y --
+    /y exch def
+    0 y pageSize y drawline
+} def
+
+/vline { % y --
+    /x exch def
+    x 0 x pageSize drawline
+} def
+
+/drawpage {
+    0 cellSize pageSize {
+        dup hline
+        vline
+    } for
     showpage
+} def
+
+0 1 10 {
+    drawpage
 } for
+
+pstack
