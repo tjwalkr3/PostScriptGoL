@@ -1,8 +1,12 @@
 %!PS
+% watch -n 3 ps2pdf GameOfLife.ps GameOfLife.pdf
+% PDF Viewer by Mathematic Inc
 
-/pageSize 200 def
-/cellSize 10 def
-<< /PageSize [pageSize pageSize] >> setpagedevice
+/pageSize 5 def       % Number of cells along each side
+/cellSize 10 def      % Size of each cell in points (pixels)
+/totalPageSize pageSize cellSize mul def  % Total page size in points
+
+<< /PageSize [totalPageSize totalPageSize] >> setpagedevice  % Set the actual page size in points
 
 /swap2 { % a b c d -- c d a b prints as b a d c with pstack
     4 2 roll
@@ -15,38 +19,67 @@
     stroke
 } def
 
-/skipCopyBack { % a b -- b a b
-    dup
-    3 1 roll
-} def
-
-/reuseY { % y xStart xEnd -- xStart y eEnd y
-    3 1 roll
-    skipCopyBack
-} def
-
-[10 {10 array} repeat]
-
-/hline { % y --
+% Draw horizontal line at a given y position (scaled by cellSize)
+/hline { % y (in terms of cell index) --
     /y exch def
-    0 y pageSize y drawline
+    0 y cellSize mul totalPageSize y cellSize mul drawline
 } def
 
-/vline { % y --
+% Draw vertical line at a given x position (scaled by cellSize)
+/vline { % x (in terms of cell index) --
     /x exch def
-    x 0 x pageSize drawline
+    x cellSize mul 0 x cellSize mul totalPageSize drawline
 } def
 
-/drawpage {
-    0 cellSize pageSize {
-        dup hline
-        vline
+% Procedure to draw the grid
+/drawgrid {
+    % Draw the vertical lines for the grid
+    0 1 pageSize {
+        dup vline         % Draw vertical line at x
     } for
-    showpage
+
+    % Draw the horizontal lines for the grid
+    0 1 pageSize {
+        dup hline         % Draw horizontal line at y
+    } for
 } def
 
-0 1 10 {
-    drawpage
-} for
+% Procedure to fill in cells based on a 2D array of ones and zeros
+/fillCells {
+    /gridArray exch def  % The 2D array of ones and zeros is passed to the stack
 
-pstack
+    0 1 pageSize 1 sub {  % Iterate over rows (y-axis)
+        /row exch def
+        0 1 pageSize 1 sub {  % Iterate over columns (x-axis)
+            /col exch def
+            gridArray row get col get
+            
+            1 eq {
+                col cellSize mul row cellSize mul moveto % move to the bottom left corner of a cell
+                cellSize 0 rlineto          % Draw right (to the bottom-right corner)
+                0 cellSize rlineto          % Draw up (to the top-right corner)
+                cellSize -1 mul 0 rlineto   % Draw left (to the top-left corner)
+                closepath                   % Close the path (back to starting point)
+                0 0 0 setrgbcolor   % Set the fill color to black
+                fill                % Fill the square with the current color
+            }
+        } for
+    } for
+} def
+
+% Example 2D array of ones and zeros (5x5 grid)
+/sampleGrid [
+    [1 0 0 1 0]
+    [0 1 1 0 1]
+    [1 1 0 0 0]
+    [0 0 1 1 1]
+    [1 0 1 0 0]
+] def
+
+% Draw the grid first
+drawgrid
+
+% Fill the cells based on the array
+sampleGrid fillCells
+
+showpage  % Finalize the page
