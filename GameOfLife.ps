@@ -4,10 +4,25 @@
 
 /pageSize 10 def                          % Number of cells along each side
 /cellSize 15 def                          % Size of each cell in points (pixels)
-/iterations 60 def                        % Number of iterations to run Conway's Game of Life
+/iterations 5 def                        % Number of iterations to run Conway's Game of Life
 /totalPageSize pageSize cellSize mul def  % Total page size in points
 
 << /PageSize [totalPageSize totalPageSize] >> setpagedevice  % Set the actual page size in points
+
+/assertEqual { % a b --
+    2 copy softEqual not {
+        exch
+        (Assertion Failed!!\n) print
+        (Expected: ) print ==
+        (Was:      ) print ==
+        quit
+    } if
+    pop pop
+} def
+
+/buildBoard {
+    [pageSize { [pageSize { 0 } repeat]} repeat]
+} def
 
 /swap2 { % a b c d -- c d a b prints as b a d c with pstack
     4 2 roll
@@ -139,8 +154,6 @@
     } for
 } def
 
-
-
 % Example 2D array of ones and zeros (5x5 grid)
 /sampleGrid [
     [0 0 0 0 0 0 0 0 0 0]
@@ -161,7 +174,6 @@
     showpage
 } def
 
-drawpage
 % Show the same page 10 times
 iterations {
     drawpage
