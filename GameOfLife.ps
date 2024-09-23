@@ -2,8 +2,8 @@
 % watch -n 3 ps2pdf GameOfLife.ps GameOfLife.pdf
 % PDF Viewer by Mathematic Inc
 
-/pageSize 5 def       % Number of cells along each side
-/cellSize 10 def      % Size of each cell in points (pixels)
+/pageSize 10 def       % Number of cells along each side
+/cellSize 15 def      % Size of each cell in points (pixels)
 /totalPageSize pageSize cellSize mul def  % Total page size in points
 
 << /PageSize [totalPageSize totalPageSize] >> setpagedevice  % Set the actual page size in points
@@ -52,28 +52,32 @@
         /row exch def
         0 1 pageSize 1 sub {  % Iterate over columns (x-axis)
             /col exch def
-            gridArray row get col get
-            
-            1 eq {
-                col cellSize mul row cellSize mul moveto % move to the bottom left corner of a cell
+            /currentCell gridArray row get col get def
+            currentCell 1 eq {
+                col cellSize mul totalPageSize row 1 add cellSize mul sub moveto % move to the bottom left corner of a cell
                 cellSize 0 rlineto          % Draw right (to the bottom-right corner)
                 0 cellSize rlineto          % Draw up (to the top-right corner)
                 cellSize -1 mul 0 rlineto   % Draw left (to the top-left corner)
                 closepath                   % Close the path (back to starting point)
-                0 0 0 setrgbcolor   % Set the fill color to black
-                fill                % Fill the square with the current color
-            }
+                0.1451 0.6563 0.2969 setrgbcolor       % Set the fill color to black
+                fill                                   % Fill the square with the current color
+            } if
         } for
     } for
 } def
 
 % Example 2D array of ones and zeros (5x5 grid)
 /sampleGrid [
-    [1 0 0 1 0]
-    [0 1 1 0 1]
-    [1 1 0 0 0]
-    [0 0 1 1 1]
-    [1 0 1 0 0]
+    [0 0 0 0 0 0 0 0 0 0]
+    [0 0 1 0 0 0 0 0 0 0]
+    [0 0 0 1 0 0 0 0 0 0]
+    [0 1 1 1 0 0 0 0 0 0]
+    [0 0 0 0 0 0 0 0 0 0]
+    [0 0 0 0 0 0 0 0 0 0]
+    [0 0 0 0 0 0 0 0 0 0]
+    [0 0 0 0 0 0 0 0 0 0]
+    [0 0 0 0 0 0 0 0 0 0]
+    [0 0 0 0 0 0 0 0 0 0]
 ] def
 
 % Draw the grid first
