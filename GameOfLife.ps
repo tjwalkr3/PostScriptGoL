@@ -1,6 +1,6 @@
 %!PS
 
-/pageSize 10 def                          % Number of cells along each side
+/pageSize 15 def                          % Number of cells along each side
 /cellSize 15 def                          % Size of each cell in points (pixels)
 /iterations 100 def                       % Number of iterations to run Conway's Game of Life
 /totalPageSize pageSize cellSize mul def  % Total page size in points
@@ -183,7 +183,6 @@
 /sampleGrid [pageSize { [pageSize { 0 } repeat]} repeat] def
 
 /initializeGlider {
-    /sampleGrid [pageSize { [pageSize { 0 } repeat]} repeat] def
     sampleGrid 2 get 0 1 put
     sampleGrid 2 get 1 1 put
     sampleGrid 2 get 2 1 put
@@ -210,158 +209,3 @@ iterations {
 } repeat
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Beginning of Assert Code
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-/each { % n proc -- executes proc for each i from 0 to n - 1
-    0 1 swap2
-    exch 1 sub
-    exch
-    for
-} def
-
-/arrayLengths { % a1 a2 -- l1 l2
-    length
-    exch length exch
-} def
-
-/top2AreArrays { % a1 a2 -- b
-    type /arraytype eq
-    exch type /arraytype eq
-    and
-} def
-
-/indexEach { % a1 a2 k -- a1 a2 a1[k] a2[k]
-    3 copy    
-    % a1 a2 k a1 a2 k
-    get
-    % a1 a2 k a1 a2[k]
-    3 1 roll
-    % a1 a2 a2[k] k a1 
-    exch get
-    % a1 a2 a2[k] a1[k]
-    exch
-} def
-
-/sameLengths { % a1 a2 -- b
-    arrayLengths eq
-} def
-
-/saveStart { % a1 a2 -- true a1 a2
-    true 3 1 roll
-} def
-
-/softEqual { % v1 v2 -- v1==v2
-    2 copy top2AreArrays {
-        arrayEqual
-    } {
-        eq
-    } ifelse
-} def
-
-/andAndSave2Before { % b1 x y b2 -- b1&b2 x y
-    4 -1 roll and
-    % x y b
-    3 1 roll
-} def
-
-/areAllEqual { % a1 a2 -- !!!
-    saveStart
-    dup length 
-    {
-        indexEach softEqual
-        andAndSave2Before
-    } each
-    pop
-    pop
-} def
-
-/arrayEqual { % a1 a2 -- b
-    2 copy sameLengths {
-        areAllEqual
-    } {
-        pop pop
-        false
-    } ifelse
-} def
-
-/assertEqual { % a b --
-    2 copy softEqual not {
-        exch
-        (Assertion Failed!!\n) print
-        (Expected: ) print ==
-        (Was:      ) print ==
-        quit
-    } if
-    pop pop
-} def
-
-/buildBoard {
-    [pageSize { [pageSize { 0 } repeat]} repeat]
-} def
-
-%%%%%%%%%%%%%%%%%%%%
-% End of Assert Code
-%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%
-% Beginning of Tests
-%%%%%%%%%%%%%%%%%%%%
-
-% Test the wrapping functions in the context of array indexing
-0 9 wrapUp assertEqual
-9 8 wrapUp assertEqual
-9 0 wrapDown assertEqual
-8 9 wrapDown assertEqual
-
-/sampleGrid [
-    [3 5 0 1 6]
-    [1 1 1 0 2]
-    [4 7 0 1 8]
-    [1 0 1 0 1]
-    [0 1 0 1 0]
-] def
-
-/col 0 def
-/row 1 def
-/pageSize 5 def
-
-% right
-1 sampleGrid row get col wrapUp get assertEqual
-% left
-2 sampleGrid row get col wrapDown get assertEqual
-% up
-3 sampleGrid row wrapDown get col get assertEqual
-% down
-4 sampleGrid row wrapUp get col get assertEqual
-% up right
-5 sampleGrid row wrapDown get col wrapUp get assertEqual
-% up left
-6 sampleGrid row wrapDown get col wrapDown get assertEqual
-% down right
-7 sampleGrid row wrapUp get col wrapUp get assertEqual
-% down left
-8 sampleGrid row wrapUp get col wrapDown get assertEqual
-
-% Test the neighbor count functions on a larger array
-/sampleGrid [
-    [0 0 0 0 0 0 0 0 0 0]
-    [0 0 1 0 0 0 0 0 0 0]
-    [0 0 0 1 0 0 0 0 0 0]
-    [0 1 1 1 0 0 0 0 0 0]
-    [0 0 0 0 0 0 0 0 0 0]
-    [0 0 0 0 0 0 0 0 0 0]
-    [0 1 0 0 0 0 0 0 0 1]
-    [0 1 0 0 0 0 0 0 0 1]
-    [0 1 0 0 0 0 0 0 0 1]
-    [0 0 0 0 0 0 0 0 0 0]
-] def
-
-/pageSize 10 def
-
-5 2 2 countNeighbors assertEqual
-6 7 0 countNeighbors assertEqual
-4 6 0 countNeighbors assertEqual
-
-% test liveOrDie
