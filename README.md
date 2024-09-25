@@ -11,7 +11,7 @@ Then enter he directory:
 cd PostScriptGoL
 ```
 
-To run this postscript file, download <a href="https://www.ghostscript.com/">ghostscript</a>: 
+To run this postscript file, download <a href="https://www.ghostscript.com/" target="_blank">ghostscript</a>: 
 
 ```
 sudo apt install ghostscript -y
