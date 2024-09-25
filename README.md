@@ -1,20 +1,24 @@
 # Running The Project
-<p>Download the project: </p>
+Download the project: 
+
 ```
 git clone https://github.com/tjwalkr3/PostScriptGoL.git
 ```
 
-<p>Then enter he directory.</p>
+Then enter he directory: 
+
 ```
 cd PostScriptGoL
 ```
 
-<p>To run this postscript file, download <a href="https://www.ghostscript.com/">ghostscript</a>: </p>
+To run this postscript file, download <a href="https://www.ghostscript.com/">ghostscript</a>: 
+
 ```
 sudo apt install ghostscript -y
 ```
 
-<p>Then generate a PDF with the command: </p>
+Then generate a PDF with the command: 
+
 ```
 ps2pdf GameOfLife.ps GameOfLife.pdf
 ```
