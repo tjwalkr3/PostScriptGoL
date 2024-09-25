@@ -1,10 +1,10 @@
 %!PS
 
-/pageSize 15 def                          % Number of cells along each side
+/pageSize 30 def                          % Number of cells along each side
 /cellSize 15 def                          % Size of each cell in points (pixels)
-/iterations 100 def                       % Number of iterations to run Conway's Game of Life
+/iterations 120 def                       % Number of iterations to run Conway's Game of Life
 /totalPageSize pageSize cellSize mul def  % Total page size in points
-/random false def     % true: init with random, false: init with glider
+/random true def     % true: init with random, false: init with glider
 
 << /PageSize [totalPageSize totalPageSize] >> setpagedevice  % Set the actual page size in points
 
