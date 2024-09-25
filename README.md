@@ -5,7 +5,7 @@ Download the project:
 git clone https://github.com/tjwalkr3/PostScriptGoL.git
 ```
 
-Then enter he directory: 
+Then enter the directory: 
 
 ```
 cd PostScriptGoL
