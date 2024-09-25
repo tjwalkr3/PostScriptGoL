@@ -1,4 +1,4 @@
-# Running The Project
+# Running Conway's Game of Life in PostScript
 Download the project: 
 
 ```
